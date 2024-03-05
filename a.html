@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Gallery</title>
+<style>
+    /* Basic styling */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    .image-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .image-item {
+        margin: 10px;
+        text-align: center;
+    }
+    .image-item img {
+        max-width: 200px;
+        max-height: 200px;
+        border-radius: 5px;
+    }
+</style>
+</head>
+<body>
+<div class="image-container"></div>
+
+<script>
+    // Function to fetch image data from URL
+    async function fetchImageData(url) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching image data:', error);
+        }
+    }
+
+    // Function to render images
+    function renderImages(imageData) {
+        const container = document.querySelector('.image-container');
+
+        // Clear existing content
+        container.innerHTML = '';
+
+        // Iterate over image data and create HTML elements
+        imageData.forEach(image => {
+            const item = document.createElement('div');
+            item.classList.add('image-item');
+
+            const img = document.createElement('img');
+            img.src = image.src;
+            img.alt = image.title;
+
+            const title = document.createElement('h3');
+            title.textContent = image.title;
+
+            const tag = document.createElement('p');
+            tag.textContent = image.tag;
+
+            item.appendChild(img);
+            item.appendChild(title);
+            item.appendChild(tag);
+
+            container.appendChild(item);
+        });
+    }
+
+    // URL from which to fetch image data
+    const imageURL = 'https://example.com/image-data';
+
+    // Fetch image data and render images
+    fetchImageData(imageURL)
+        .then(data => renderImages(data))
+        .catch(error => console.error('Error fetching image data:', error));
+</script>
+</body>
+</html>
